@@ -1,0 +1,88 @@
+% XDS project file
+% Code generation and debugging info
+!if not defined DEBUG then
+   -DEBUG:+
+!end
+!if DEBUG then
+   !new mode = "debug"
+   -ASSERT+
+   -GENDEBUG+
+   -GENHISTORY+
+   -LINENO+
+   -GENFRAME+
+   -SPACE-
+   -NOOPTIMIZE+
+   -DOREORDER-
+   -PROCINLINE-
+   -DBGNESTEDPROC+
+!else
+   !new mode = "optimized"
+   -ASSERT-
+   -GENDEBUG-
+   -GENHISTORY-
+   -LINENO-
+   -GENFRAME-
+   -SPACE-
+   -NOOPTIMIZE-
+   -DOREORDER+
+   -PROCINLINE+
+   -DBGNESTEDPROC-
+!end
+-GENPTRINIT+
+
+% Run-time checks, all options are ON by default
+-IOVERFLOW-
+-COVERFLOW-
+-CHECKDINDEX+
+-CHECKDIV+
+-CHECKINDEX+
+-CHECKNIL+
+-CHECKPROC+
+-CHECKRANGE-
+-CHECKSET-
+-CHECKTYPE+
+
+% Memory
+-GCAUTO+
+-COMPILERHEAP = 160000000
+-COMPILERTHRES = 8000000
+-STACKLIMIT = 60000
+% HEAPLIMIT set in the main module overrides this setting
+-HEAPLIMIT = 20000000
+-ALIGNMENT = 1
+-ENUMSIZE = 2
+-SETSIZE = 4
+
+% Other
+-MINCPU = PENTIUM
+-CPU = PENTIUM
+-NOPTRALIAS+
+-CHANGESYM+
+-OVERWRITE+
+-VERBOSE+
+-XCOMMENTS+
+-M2EXTENSIONS+
+-O2EXTENSIONS+
+-O2NUMEXT-
+-BSTYLE = DEF
+
+% Compiler warnings
+% enable all warnings
+-WOFF-
+% variable "%s" has compile time defined value here
+-WOFF314+
+% field %s alignment (%d) is greater then record alignment (%d)
+-WOFF324+
+% function %s inlined
+-WOFF330+
+% redundant code eliminated
+-WOFF900+
+% function result is not used
+-WOFF903+
+
+% Linking
+-GUI-
+!new linker = xds
+!new exename = $(project)
+!message "Compiling " + exename + ".exe in " + mode + " mode"
+!module $(project).ob2

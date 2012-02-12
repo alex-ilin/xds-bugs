@@ -1,0 +1,67 @@
+XDS 2.51, default configuration, Windows platform.
+I'm trying to use an enumeration type FORMAT declared in a definition module (Definition.def) in my Oberon module (Project.ob2). The enumeration initially comes from a C header file, and I needed to create a special constant = "-1" belonging to the type. I did it the way I saw it done in the Windows.def:
+[code]CONST FIF_UNDEFINED = SYSTEM.CAST (FORMAT, 0FFFFFFFFh);[/code]
+When I try to compile the following assignment:
+[code]VAR fmt: Definition.FORMAT;
+BEGIN fmt := Definition.FIF_UNDEFINED;[/code]
+the compiler detects an error: E122 expression out of bounds.
+
+Here are the files to reproduce the problem with some additional comments:
+make.bat, makeDef.prj, makePrj.prj - needed to compile
+Definition.def, Project.ob2 - sources
+
+File contents:
+[quote="make.bat"]
+:: make Definition.sym
+xc.exe =p =a makeDef.prj
+:: make Project.ob2
+xc.exe =p makePrj.prj[/quote]
+
+[quote="makeDef.prj"]-makefile-
+!module Definition[/quote]
+
+[quote="makePrj.prj"]!module Project[/quote]
+
+[quote="Definition.def"]<* ENUMSIZE="4" *><* +M2EXTENSIONS *>
+DEFINITION MODULE ['StdCall'] Definition;
+
+IMPORT SYSTEM;
+
+TYPE
+  FORMAT = (
+    FIF_BMP,
+    FIF_ICO
+  );
+
+CONST
+  FIF_UNKNOWN = SYSTEM.CAST (FORMAT, 0FFFFFFFFh);
+
+END Definition.[/quote]
+
+[quote="Project.ob2"](* Why is the assignment below impossible, although the comparison works? *)
+<* +MAIN *><* -GUI *><* +NOOPTIMIZE *>(* NOOPTIMIZE is to avoid IF elimination, not necessary *)
+MODULE Project;
+
+IMPORT Definition,Out,SYSTEM;
+
+VAR fmt: Definition.FORMAT;
+BEGIN
+   (* The SYSTEM.VAL version works as expected. *)
+   fmt := SYSTEM.VAL (Definition.FORMAT, Definition.FIF_UNKNOWN);
+   (* But the following line would not compile (E122 expression out of bounds) *)
+   fmt := Definition.FIF_UNKNOWN;
+   (* The comparison below is compiled without any complaints. *)
+   IF fmt = Definition.FIF_UNKNOWN THEN
+      Out.String ('Constant check 1: OK.');
+      Out.Ln;
+   ELSE
+      Out.String ('Constant check 1: FAILED.');
+      Out.Ln;
+   END;
+END Project.[/quote]
+
+Command to compile: make.bat
+
+Is this a compiler bug?
+Is there anything I can do to make it work without using the SYSTEM.VAL?
+Will the SYSTEM.VAL always work as expected, or are there any side-effects possible?

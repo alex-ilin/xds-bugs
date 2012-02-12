@@ -1,0 +1,15 @@
+In XDS 2.51 I encountered the following bugs:
+enum-1
+LocalPtrInit
+LocalRecordPtrInit
+LocalRecordAssert
+LongInvalidCase
+LongInvalidLocation
+OptimizerBug
+Projection
+Publicity
+RecordUnpack - FIXED in 2.60 beta
+Receivers
+Str+Char
+TypeGuard - FIXED in 2.60 beta
+tmp.HeapLimit (Can't allocate more than 1 Gb of heap.)

@@ -1,0 +1,17 @@
+% Paths to look for files in or put files to.
+-lookup = *.ob2 = .
+-lookup = *.obj = ./obj
+-lookup = *.sym = ./obj
+-lookup = *.odf = ./obj
+-lookup = *.exe = .
+-lookup = *.lnk = ./obj
+
+% Removing any of the following options removes the bug.
+-NOPTRALIAS+
+-CHECKNIL-
+-DOREORDER+
+-GENDEBUG-
+-PROCINLINE+
+
+%Main module
+!module Main.ob2

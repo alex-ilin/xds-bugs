@@ -1,0 +1,15 @@
+<* ENUMSIZE="4" *><* M2EXTENSIONS+ *>
+DEFINITION MODULE ['StdCall'] Definition;
+
+IMPORT SYSTEM;
+
+TYPE
+  FORMAT = (
+    FIF_BMP,
+    FIF_ICO
+  );
+
+CONST
+  FIF_UNKNOWN = SYSTEM.CAST (FORMAT, 0FFFFFFFFh);
+
+END Definition.
